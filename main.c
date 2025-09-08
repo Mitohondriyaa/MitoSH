@@ -30,6 +30,46 @@ char* msh_read_cmd() {
     return cmd;
 }
 
+char** msh_parse_cmd(char* cmd) {
+    char* cmd_cpy = strdup(cmd);
+
+    if (!cmd_cpy) {
+        fprintf(stderr, "\033[1;31mAllocation error (%s)\033[0m\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    char* token = NULL;
+    char* delimiter = " \n";
+    char** argv = NULL;
+    int argc = 0;
+
+    token = strtok(cmd_cpy, delimiter);
+
+    while (token) {
+        argc++;
+        token = strtok(NULL, delimiter);
+    }
+
+    argv = malloc(sizeof(char*) * (argc + 1));
+
+    if (!argv) {
+        fprintf(stderr, "\033[1;31mAllocation error (%s)\033[0m\n", strerror(errno));
+        free(cmd_cpy);
+        exit(EXIT_FAILURE);
+    }
+
+    token = strtok(cmd, delimiter);
+
+    while (token) {
+        argv[argc] = token;
+        token = strtok(NULL, delimiter);
+    }
+
+    argv[argc] = NULL;
+
+    return argv;
+}
+
 int main(void) {
 
 
