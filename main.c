@@ -98,8 +98,25 @@ int msh_execute_cmd(char** argv) {
     return -1;
 }
 
-int main(void) {
+void msh_loop(void) {
+    char* line;
+    char** argv;
+    int status;
 
+    do {
+        printf("\033[38;5;28mMitoSH> \033[0m");
+        line = msh_read_cmd();
+        argv = msh_parse_cmd(line);
+        status = msh_execute_cmd(argv);
+
+        free(line);
+        free(argv);
+    } while (status);
+}
+
+int main(void) {
+    msh_init();
+    msh_loop();
 
     return 0;
 }
