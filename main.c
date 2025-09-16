@@ -88,13 +88,14 @@ int msh_execute_cmd(char** argv) {
         exit(EXIT_FAILURE);
     }
     else {
-        waitpid(pid, &status, WAIT_MYPGRP);
+        waitpid(pid, &status, 0);
 
         if (WIFEXITED(status)) {
             return WEXITSTATUS(status);
         }
     }
 
+    fprintf(stderr, "\033[1;31mCommand not found\033[0m\n");
     return -1;
 }
 
@@ -102,6 +103,8 @@ void msh_loop(void) {
     char* line;
     char** argv;
     int status;
+
+    setbuf(stdout, NULL);
 
     do {
         printf("\033[38;5;28mMitoSH> \033[0m");
